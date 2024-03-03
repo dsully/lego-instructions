@@ -13,25 +13,15 @@ description = ""
 license = { text = "MIT" }
 name = "lego-instructions"
 readme = "README.md"
-requires-python = ">=3.10"
+requires-python = ">=3.11"
 version = "0.1"
 
 [project.scripts]
 download-lego-instructions = "script:cli"
 
 [project.optional-dependencies]
-[build-system]
-build-backend = "pdm.pep517.api"
-requires = ["pdm-pep517>=1.0.0"]
-
-[tool]
-[tool.pdm]
-[tool.pdm.dev-dependencies]
 dev = [
-  "mypy>=0.971",
-  "flake8>=2.3.0",
-  "pyproject-flake8>=0.0.1a5",
-  "black>=22.6.0",
+  "mypy>=1.8.0",
 ]
 
 [[tool.mypy.overrides]]
@@ -41,10 +31,5 @@ module = [
   "iniparse",
 ]
 
-[tool.black]
+[tool.ruff]
 line-length = 120
-
-[tool.isort]
-include_trailing_comma = true
-line_length = 120
-multi_line_output = 3

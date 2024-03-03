@@ -70,9 +70,7 @@ def download(url: str, path: Path) -> None:
 
                 for chunk in response.iter_bytes():
                     fh.write(chunk)
-                    progress.update(
-                        download_task, completed=response.num_bytes_downloaded
-                    )
+                    progress.update(download_task, completed=response.num_bytes_downloaded)
 
 
 def login(config):
@@ -143,9 +141,7 @@ def save_instructions(config: INIConfig, name: str, set_id: str) -> None:
     :param set_id: The set ID.
     """
 
-    response = httpx.post(
-        API_URL + "/getInstructions", data={"setID": str(set_id), "apiKey": API_KEY}
-    )
+    response = httpx.post(API_URL + "/getInstructions", data={"setID": str(set_id), "apiKey": API_KEY})
 
     soup = BeautifulSoup(response.text)
     urls = []

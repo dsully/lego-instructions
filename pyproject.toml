@@ -16,33 +16,33 @@ readme = "README.md"
 requires-python = ">=3.10"
 version = "0.1"
 
-  [project.scripts]
-  download-lego-instructions = "script:cli"
+[project.scripts]
+download-lego-instructions = "script:cli"
 
-  [project.optional-dependencies]
+[project.optional-dependencies]
 [build-system]
 build-backend = "pdm.pep517.api"
-requires = [ "pdm-pep517>=1.0.0" ]
+requires = ["pdm-pep517>=1.0.0"]
 
 [tool]
-  [tool.pdm]
-    [tool.pdm.dev-dependencies]
-    dev = [
-      "mypy>=0.971",
-      "flake8>=2.3.0",
-      "pyproject-flake8>=0.0.1a5",
-      "black>=22.6.0",
-    ]
+[tool.pdm]
+[tool.pdm.dev-dependencies]
+dev = [
+  "mypy>=0.971",
+  "flake8>=2.3.0",
+  "pyproject-flake8>=0.0.1a5",
+  "black>=22.6.0",
+]
 
-    [[tool.mypy.overrides]]
-    ignore_missing_imports = true
-    module = [
-      "bs4",
-      "iniparse",
-    ]
+[[tool.mypy.overrides]]
+ignore_missing_imports = true
+module = [
+  "bs4",
+  "iniparse",
+]
 
 [tool.black]
-line_length = 120
+line-length = 120
 
 [tool.isort]
 include_trailing_comma = true

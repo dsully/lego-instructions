@@ -30,7 +30,6 @@ def read_config() -> INIConfig:
     try:
         return INIConfig(INI_FILE.open())
     except OSError:
-
         print(f"Creating default config file at: {INI_FILE}")
         print("Please edit before continuing.")
 
@@ -58,7 +57,6 @@ def download(url: str, path: Path) -> None:
     filename = path.joinpath(url.split("/")[-1])
 
     with filename.open("wb") as fh:
-
         with httpx.stream("GET", url) as response:
             total = int(response.headers["Content-Length"])
 
@@ -72,7 +70,9 @@ def download(url: str, path: Path) -> None:
 
                 for chunk in response.iter_bytes():
                     fh.write(chunk)
-                    progress.update(download_task, completed=response.num_bytes_downloaded)
+                    progress.update(
+                        download_task, completed=response.num_bytes_downloaded
+                    )
 
 
 def login(config):
@@ -83,9 +83,13 @@ def login(config):
     :rtype: str
     """
 
-    response = requests.post(
+    response = httpx.post(
         API_URL + "/login",
-        data={"apiKey": API_KEY, "username": config.brickset.username, "password": config.brickset.password},
+        data={
+            "apiKey": API_KEY,
+            "username": config.brickset.username,
+            "password": config.brickset.password,
+        },
     )
 
     response.raise_for_status()
@@ -102,7 +106,7 @@ def get_sets(item, token):
     :rtype: str, str
     """
 
-    response = requests.post(
+    response = httpx.post(
         API_URL + "/getSets",
         data={
             "query": item,
@@ -139,7 +143,9 @@ def save_instructions(config: INIConfig, name: str, set_id: str) -> None:
     :param set_id: The set ID.
     """
 
-    response = httpx.post(API_URL + "/getInstructions", data={"setID": str(set_id), "apiKey": API_KEY})
+    response = httpx.post(
+        API_URL + "/getInstructions", data={"setID": str(set_id), "apiKey": API_KEY}
+    )
 
     soup = BeautifulSoup(response.text)
     urls = []

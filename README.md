@@ -1,18 +1,20 @@
-## Download LEGO PDF instruction PDFs
+# Download LEGO PDF instruction PDFs
 
-### Requirements:
+## Requirements
 
 * A working Python installation.
 * A http://brickset.com/ login.
 
-### Install:
+### Install
+
     pip install .
 
+### Usage
 
-### Usage:
     download-lego-instructions <set id>
-    
+
 The first time you run, it will create a default config file in:
     ~/.lego-instructions.ini
 
 Edit & add your http://brickset.com/ username & password & set a download path.
+

@@ -1,35 +1,32 @@
 [project]
+name = "lego-instructions"
+version = "0.1"
+description = ""
+readme = "README.md"
+license = "MIT"
 authors = [
   { name = "Dan Sully", email = "dan+github@sully.org" },
+]
+requires-python = ">=3.11"
+classifiers = [
+  "Programming Language :: Python :: 3 :: Only",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
+  "Programming Language :: Python :: 3.14",
+  "Programming Language :: Python :: 3.15",
 ]
 dependencies = [
   "beautifulsoup4",
   "click",
-  "iniparse",
   "httpx",
+  "iniparse",
   "rich>=12.5.1",
 ]
-description = ""
-license = { text = "MIT" }
-name = "lego-instructions"
-readme = "README.md"
-requires-python = ">=3.11"
-version = "0.1"
+scripts.download-lego-instructions = "script:cli"
 
-[project.scripts]
-download-lego-instructions = "script:cli"
-
-[project.optional-dependencies]
-dev = [
-  "mypy>=1.8.0",
-]
-
-[[tool.mypy.overrides]]
-ignore_missing_imports = true
-module = [
-  "bs4",
-  "iniparse",
-]
+[tool.uv]
+package = true
 
 [tool.ruff]
 line-length = 120

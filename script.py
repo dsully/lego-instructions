@@ -56,24 +56,23 @@ def download(url: str, path: Path) -> None:
 
     filename = path.joinpath(url.split("/")[-1])
 
-    with filename.open("wb") as fh:
-        with httpx.stream("GET", url) as response:
-            total = int(response.headers["Content-Length"])
+    with filename.open("wb") as fh, httpx.stream("GET", url) as response:
+        total = int(response.headers["Content-Length"])
 
-            with Progress(
-                "[progress.percentage]{task.percentage:>3.0f}%",
-                BarColumn(bar_width=None),
-                DownloadColumn(),
-                TransferSpeedColumn(),
-            ) as progress:
-                download_task = progress.add_task("Download", total=total)
+        with Progress(
+            "[progress.percentage]{task.percentage:>3.0f}%",
+            BarColumn(bar_width=None),
+            DownloadColumn(),
+            TransferSpeedColumn(),
+        ) as progress:
+            download_task = progress.add_task("Download", total=total)
 
-                for chunk in response.iter_bytes():
-                    fh.write(chunk)
-                    progress.update(download_task, completed=response.num_bytes_downloaded)
+            for chunk in response.iter_bytes():
+                fh.write(chunk)
+                progress.update(download_task, completed=response.num_bytes_downloaded)
 
 
-def login(config):
+def login(config: INIConfig) -> str:
     """Login to the Brickset API service.
 
     :param INIConfig config: A configuration object containing the API Key, username & password.
@@ -95,7 +94,7 @@ def login(config):
     return BeautifulSoup(response.text).find("string").text
 
 
-def get_sets(item, token):
+def get_sets(item: str, token: str) -> set[tuple[str, str]]:
     """Fetch the Brickset "Sets" using the lego "Set ID" as the query.
 
     :param int item: The LEGO Set ID. This is the number on the front of the LEGO package.
@@ -125,7 +124,7 @@ def get_sets(item, token):
 
     response.raise_for_status()
 
-    matches = set()
+    matches: set[tuple[str, str]] = set()
 
     for element in BeautifulSoup(response.text).find_all("sets"):
         matches.add((element.find("name").text, element.find("setid").text))
@@ -141,7 +140,7 @@ def save_instructions(config: INIConfig, name: str, set_id: str) -> None:
     :param set_id: The set ID.
     """
 
-    response = httpx.post(API_URL + "/getInstructions", data={"setID": str(set_id), "apiKey": API_KEY})
+    response = httpx.post(API_URL + "/getInstructions", data={"setID": set_id, "apiKey": API_KEY})
 
     soup = BeautifulSoup(response.text)
     urls = []
@@ -159,12 +158,12 @@ def save_instructions(config: INIConfig, name: str, set_id: str) -> None:
     for url in urls:
         download(url, path)
 
-    print
+    print()
 
 
 @click.command()
-@click.argument("set_id")
-def cli(set_id):
+@click.argument("set_id", type=str)
+def cli(set_id: str):
     """Download LEGO PDFs using the set ID."""
 
     try:
@@ -176,9 +175,9 @@ def cli(set_id):
         if not sets:
             raise ValueError(f"Couldn't find any Brickset sets matching: {set_id}")
 
-        for name, set_id in sets:
-            save_instructions(config, name, set_id)
+        for name, sid in sets:
+            save_instructions(config, name, sid)
 
-    except Exception as e:
+    except Exception:  # noqa: BLE001
         traceback.print_exc()
-        sys.exit(e)
+        sys.exit(1)
